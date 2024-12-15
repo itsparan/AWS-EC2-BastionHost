@@ -25,7 +25,7 @@ description: Create AWS EC2 Bastion Host used to connect to EKS Node Group EC2 V
 
 ## Step-01: For VPC switch Availability Zones from Static to Dynamic
 - [Datasource: aws_availability_zones](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones)
-- **File Name:** `c3-02-vpc-module.tf` for changes 1 and 2
+- **File Name:** `vpc-module.tf` for changes 1 and 2
 ```t
 # Change-1: Add Datasource named aws_availability_zones
 # AWS Availability Zones Datasource  
@@ -61,7 +61,7 @@ variable "vpc_availability_zones" {
 cd terraform-manifests/private-key
 chmod 400 eks-terraform-key.pem
 ```
-## Step-03: c4-01-ec2bastion-variables.tf
+## Step-03: ec2bastion-variables.tf
 ```t
 # AWS EC2 Instance Terraform Variables
 
@@ -79,7 +79,7 @@ variable "instance_keypair" {
   default = "eks-terraform-key"
 }
 ```
-## Step-04: c4-03-ec2bastion-securitygroups.tf
+## Step-04: ec2bastion-securitygroups.tf
 ```t
 # AWS EC2 Security Group Terraform Module
 # Security Group for Public Bastion Host
@@ -99,7 +99,7 @@ module "public_bastion_sg" {
 }
 ```
 
-## Step-05: c4-04-ami-datasource.tf
+## Step-05: ami-datasource.tf
 ```t
 # Get latest AMI ID for Amazon Linux2 OS
 data "aws_ami" "amzlinux2" {
@@ -124,7 +124,7 @@ data "aws_ami" "amzlinux2" {
 }
 ```
 
-## Step-06: c4-05-ec2bastion-instance.tf
+## Step-06: ec2bastion-instance.tf
 ```t
 # AWS EC2 Instance Terraform Module
 # Bastion Host - EC2 Instance that will be created in VPC Public Subnet
@@ -143,7 +143,7 @@ module "ec2_public" {
 }
 ```
 
-## Step-07: c4-06-ec2bastion-elasticip.tf
+## Step-07: ec2bastion-elasticip.tf
 ```t
 # Create Elastic IP for Bastion Host
 # Resource - depends_on Meta-Argument
@@ -154,7 +154,7 @@ resource "aws_eip" "bastion_eip" {
   tags = local.common_tags
 }
 ```
-## Step-08: c4-07-ec2bastion-provisioners.tf
+## Step-08: ec2bastion-provisioners.tf
 ```t
 # Create a Null Resource and Provisioners
 resource "null_resource" "copy_ec2_keys" {
@@ -195,7 +195,7 @@ instance_type = "t3.micro"
 instance_keypair = "eks-terraform-key"
 ```
 
-## Step-10: c4-02-ec2bastion-outputs.tf
+## Step-10: ec2bastion-outputs.tf
 ```t
 # AWS EC2 Instance Terraform Outputs
 # Public EC2 Instances - Bastion Host
@@ -214,7 +214,7 @@ output "ec2_bastion_eip" {
 
 ```
 
-## Step-11: c5-01-eks-variables.tf
+## Step-11: eks-variables.tf
 ```t
 # EKS Cluster Input Variables
 variable "cluster_name" {
@@ -231,13 +231,13 @@ variable "cluster_name" {
 cluster_name = "eksdemo1"
 ```
 
-## Step-13: c2-02-local-values.tf
+## Step-13: local-values.tf
 ```t
 # Add additional local value
   eks_cluster_name = "${local.name}-${var.cluster_name}"  
 ```
 
-## Step-14: c3-02-vpc-module.tf
+## Step-14: vpc-module.tf
 - Update VPC Tags to Support EKS
 ```t
 # Create VPC Terraform Module
